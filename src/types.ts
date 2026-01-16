@@ -17,5 +17,3 @@ export class Route implements RouteMethods {
     Object.assign(this, obj);
   }
 }
-
-export const routeGuard = (object: object) => object instanceof Route;

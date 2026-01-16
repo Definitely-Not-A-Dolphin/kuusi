@@ -1,22 +1,6 @@
 import { walkSync } from "@std/fs";
 import { relative } from "@std/path";
 import { Route } from "./types.ts";
-// import { Route } from "./types.ts";
-
-/*
-export function getRoutes(dir: string): URLPattern[] {
-  const paths = Array.from(
-    walkSync(dir, { includeDirs: false }),
-    ({ path }) => relative(dir, path),
-  );
-
-  return paths
-    .filter((path) => path.endsWith(".route.ts"))
-    .map((path) =>
-      new URLPattern({ pathname: "/" + path.split("/").slice(0, -1).join("/") })
-    );
-}
-*/
 
 export async function getRoutes(dir: string): Promise<[URLPattern, Route][]> {
   let paths = Array.from(
@@ -43,8 +27,10 @@ export async function getRoutes(dir: string): Promise<[URLPattern, Route][]> {
 
     let pathname = path;
     if (path.split("/").at(-1) === "index.route.ts") {
-      pathname = pathname.slice(0, -15) + "/";
+      pathname = pathname.slice(0, -15);
     } else if (path.endsWith(".route.ts")) pathname = pathname.slice(0, -9);
+
+    if (pathname[0] !== "/") pathname = "/" + pathname;
 
     routes.push([
       new URLPattern({
@@ -68,9 +54,6 @@ export function getRandomEmoji(): string {
 export const returnStatus = (status: number) =>
   new Response(null, { status: status });
 
-export function isObjKey(
-  key: string | number | symbol,
-  object: object,
-): key is keyof object {
-  return key in object;
+export function isObjKey<T extends object>(key: string | number | symbol, obj: T): key is keyof T {
+  return key in obj;
 }

@@ -1,33 +1,28 @@
-import { routeGuard } from "./types.ts";
-import { getRoutes, returnStatus } from "./utils.ts";
+import { getRoutes, isObjKey, returnStatus } from "./utils.ts";
 
-const routes = getRoutes("./routes");
+const routes = await getRoutes("./routes");
+
+console.log(routes);
 
 async function handler(req: Request): Promise<Response> {
-  let parsedURL = "/" + req.url.split("/").slice(3).join("/");
-  if (parsedURL.endsWith("/")) parsedURL = parsedURL.slice(0, -1);
+  let parsedURL = req.url;
+  if (!parsedURL.endsWith("/")) parsedURL += "/";
 
-  const match = routes.find((route) => route.exec(req.url));
+  console.log(parsedURL);
+
+  const match = routes.find(([url]) => url.exec(req.url));
+  console.log(match);
   if (!match) return returnStatus(404);
 
-  console.log(`path is "${parsedURL}"`);
-  console.log(match);
+  const [_, matchRoute] = match;
 
-  const imports = await import(
-    `../routes${match.pathname}/index.route.ts`
-  ) as object;
+  const thing = req.method.toUpperCase() ?? "GET";
 
-  console.log(imports);
-
-  if (
-    !("route" in imports &&
-      typeof imports.route === typeof Object &&
-      routeGuard(imports.route as object))
-  ) {
-    return returnStatus(404);
+  if (isObjKey(thing, matchRoute) && matchRoute[thing]?.(req)) {
+    return await matchRoute[thing]?.(req);
   }
 
-  return returnStatus(200);
+  return returnStatus(405);
 }
 
 Deno.serve({ port: 7776 }, handler);
