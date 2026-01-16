@@ -1,11 +1,14 @@
-type RouteMethod = (req: Request) => Promise<Response> | Response;
+type RouteMethod = (
+  req: Request,
+  patternResult: URLPatternResult,
+) => Promise<Response> | Response;
 
-export interface RouteMethods {
+export type RouteMethods = {
   GET?: RouteMethod;
   POST?: RouteMethod;
   PUT?: RouteMethod;
   DELETE?: RouteMethod;
-}
+};
 
 export class Route implements RouteMethods {
   readonly GET?: RouteMethod;

@@ -1,4 +1,4 @@
-import { getRoutes } from "./utils.ts";
+import { loadRoutes } from "./utils.ts";
 
-const routes = await getRoutes("./routes");
+const routes = await loadRoutes("./routes");
 console.log(routes);

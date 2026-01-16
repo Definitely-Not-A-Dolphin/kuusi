@@ -1,26 +1,21 @@
-import { getRoutes, isObjKey, returnStatus } from "./utils.ts";
+import { isObjKey, loadRoutes, returnStatus } from "./utils.ts";
 
-const routes = await getRoutes("./routes");
+const routes = await loadRoutes("./routes");
 
 console.log(routes);
 
 async function handler(req: Request): Promise<Response> {
-  let parsedURL = req.url;
-  if (!parsedURL.endsWith("/")) parsedURL += "/";
-
-  console.log(parsedURL);
-
   const match = routes.find(([url]) => url.exec(req.url));
-  console.log(match);
   if (!match) return returnStatus(404);
 
-  const [_, matchRoute] = match;
+  const [matchPattern, matchRoute] = match;
+  const matchPatternResult = matchPattern.exec(req.url) as URLPatternResult;
+  const reqMethodUppercase = req.method.toUpperCase() ?? "GET";
 
-  const thing = req.method.toUpperCase() ?? "GET";
-
-  if (isObjKey(thing, matchRoute) && matchRoute[thing]?.(req)) {
-    return await matchRoute[thing]?.(req);
-  }
+  if (
+    isObjKey(reqMethodUppercase, matchRoute) &&
+    matchRoute[reqMethodUppercase]?.(req, matchPatternResult)
+  ) return await matchRoute[reqMethodUppercase]?.(req, matchPatternResult);
 
   return returnStatus(405);
 }
