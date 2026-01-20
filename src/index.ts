@@ -2,6 +2,8 @@ import { isObjKey, loadRoutes, returnStatus } from "./utils.ts";
 
 const routes = await loadRoutes("./routes");
 
+console.log(routes);
+
 Deno.serve({ port: 7776 }, async function (req: Request): Promise<Response> {
   const match = routes.find(([url]) => url.exec(req.url));
   if (!match) return returnStatus(404);

@@ -26,11 +26,14 @@ export async function loadRoutes(dir: string): Promise<[URLPattern, Route][]> {
     }
 
     let pathname = "/" + path;
-    if (path.split("/").at(-1) === "index.route.ts") {
-      pathname = pathname.slice(0, -15);
-    } else if (path.endsWith(".route.ts")) {
-      pathname = pathname.slice(0, -9);
-    }
+    pathname = pathname.slice(
+      0,
+      path.split("/").at(-1) === "index.route.ts"
+        ? -("index.route.ts".length + 1)
+        : -".route.ts".length,
+    );
+
+    if (pathname === "") pathname = "/";
 
     routes.push([
       new URLPattern({
@@ -43,7 +46,7 @@ export async function loadRoutes(dir: string): Promise<[URLPattern, Route][]> {
   return routes;
 }
 
-export const randomNumber = (lower: number, upper: number) =>
+export const randomNumber = (lower: number, upper: number): number =>
   Math.floor(Math.random() * (upper - lower + 1)) + lower;
 
 export function getRandomEmoji(): string {
@@ -51,12 +54,10 @@ export function getRandomEmoji(): string {
   return emojis[randomNumber(0, emojis.length - 1)];
 }
 
-export const returnStatus = (status: number) =>
+export const returnStatus = (status: number): Response =>
   new Response(null, { status: status });
 
-export function isObjKey<T extends object>(
+export const isObjKey = <T extends object>(
   key: string | number | symbol,
   obj: T,
-): key is keyof T {
-  return key in obj;
-}
+): key is keyof T => key in obj;
