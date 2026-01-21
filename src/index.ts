@@ -1,21 +1,31 @@
-import { isObjKey, loadRoutes, returnStatus } from "./utils.ts";
+import { isObjKey, loadRoutes } from "./utils.ts";
 
 const routes = await loadRoutes("./routes");
 
-console.log(routes);
-
 Deno.serve({ port: 7776 }, async function (req: Request): Promise<Response> {
   const match = routes.find(([url]) => url.exec(req.url));
-  if (!match) return returnStatus(404);
+  if (!match) {
+    return new Response("{}", {
+      status: 404,
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+      },
+    });
+  }
 
   const [matchPattern, matchRoute] = match;
   const matchPatternResult = matchPattern.exec(req.url) as URLPatternResult;
-  const reqMethodUppercase = req.method.toUpperCase() ?? "GET";
+  const reqMethod = req.method.toUpperCase();
 
   if (
-    isObjKey(reqMethodUppercase, matchRoute) &&
-    matchRoute[reqMethodUppercase]?.(req, matchPatternResult)
-  ) return await matchRoute[reqMethodUppercase]?.(req, matchPatternResult);
+    isObjKey(reqMethod, matchRoute) &&
+    matchRoute[reqMethod]?.(req, matchPatternResult)
+  ) return await matchRoute[reqMethod]?.(req, matchPatternResult);
 
-  return returnStatus(405);
+  return new Response("{}", {
+    status: 405,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+    },
+  });
 });

@@ -13,10 +13,10 @@ if (existsSync(".env.template")) {
     envPath: ".env.template",
   });
 
-  for (const key of Object.keys(templateEnv)) {
-    if (!dotenv[key]) {
-      throw new Error(`\x1b[34mMissing .env variable ${key}\x1b[0m`);
-    }
+  const notFound = Object.keys(templateEnv).find((key) => !dotenv[key]);
+
+  if (notFound) {
+    throw new Error(`\x1b[34mMissing .env variable ${notFound}\x1b[0m`);
   }
 }
 

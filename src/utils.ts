@@ -3,14 +3,12 @@ import { relative } from "@std/path";
 import { Route } from "./types.ts";
 
 export async function loadRoutes(dir: string): Promise<[URLPattern, Route][]> {
-  let paths = Array.from(
+  const paths = Array.from(
     walkSync(dir, { includeDirs: false }),
     ({ path }) => relative(dir, path),
-  );
+  ).filter((path) => path.endsWith(".route.ts"));
 
   const routes: [URLPattern, Route][] = [];
-
-  paths = paths.filter((path) => path.endsWith(".route.ts"));
 
   for (const path of paths) {
     if (!path.endsWith(".route.ts")) continue;
@@ -36,9 +34,7 @@ export async function loadRoutes(dir: string): Promise<[URLPattern, Route][]> {
     if (pathname === "") pathname = "/";
 
     routes.push([
-      new URLPattern({
-        pathname: pathname,
-      }),
+      new URLPattern({ pathname: pathname }),
       imports.route,
     ]);
   }
@@ -53,9 +49,6 @@ export function getRandomEmoji(): string {
   const emojis = [":)", ":D", ":P", ":3"] as const;
   return emojis[randomNumber(0, emojis.length - 1)];
 }
-
-export const returnStatus = (status: number): Response =>
-  new Response(null, { status: status });
 
 export const isObjKey = <T extends object>(
   key: string | number | symbol,
