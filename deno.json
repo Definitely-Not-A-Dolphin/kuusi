@@ -1,14 +1,12 @@
 {
-  "tasks": {
-    "dev": "deno --watch -A src/index.ts",
-    "prod": "deno -A src/index.ts"
+  "name": "kuusi",
+  "version": "pre-0.0.1",
+  "exports": {
+    ".": "src/mod.ts",
+    "./env": "src/env.ts",
+    "./types": "src/types.ts"
   },
   "imports": {
-    "kuusi": "./kuusi/index.ts",
-    "kuusi/env": "./kuusi/env.ts",
-    "kuusi/types": "./kuusi/types.ts",
-    "$routes/": "./routes/",
-    "$src/": "./src/",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.6",
     "@std/fs": "jsr:@std/fs@^1.0.21",
     "@std/path": "jsr:@std/path@^1.1.4"

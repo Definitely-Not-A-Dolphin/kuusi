@@ -1,7 +1,14 @@
-export const randomNumber = (lower: number, upper: number): number =>
-  Math.floor(Math.random() * (upper - lower + 1)) + lower;
+export const isObjKey = <T extends object>(
+  key: string | number | symbol,
+  obj: T,
+): key is keyof T => key in obj;
 
-export function getRandomEmoji(): string {
-  const emojis = [":)", ":D", ":P", ":3"] as const;
-  return emojis[randomNumber(0, emojis.length - 1)];
+export function unwrap<T>(thing: T | undefined | null): NonNullable<T> {
+  if (thing === undefined) {
+    throw new Error(`Unwrapping failed: value is undefined`);
+  } else if (thing === null) {
+    throw new Error(`Unwrapping failed: value is null`);
+  }
+
+  return thing;
 }

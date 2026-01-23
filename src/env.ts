@@ -1,16 +1,17 @@
 import { load } from "@std/dotenv";
 import { existsSync } from "@std/fs";
+import { config } from "../../kuusiApp/kuusi.config.ts";
 
 const env = Deno.env.toObject();
 const dotenv = await load({
   export: true,
-  envPath: ".env",
+  envPath: config.envPath ?? ".env",
 });
 
 if (existsSync(".env.template")) {
   const templateEnv = await load({
     export: true,
-    envPath: ".env.template",
+    envPath: config.envTemplatePath ?? ".env.template",
   });
 
   const notFound = Object.keys(templateEnv).find((key) => !dotenv[key]);
