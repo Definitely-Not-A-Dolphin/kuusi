@@ -2,7 +2,13 @@ import { load } from "@std/dotenv";
 import { existsSync } from "@std/fs";
 import { config } from "../../kuusiApp/kuusi.config.ts";
 
+/**
+ * Contains all environment variables, including those in a potential `.env` file.
+ */
 const env = Deno.env.toObject();
+/**
+ * Contains all environment variables in a `.env` file.
+ */
 const dotenv = await load({
   export: true,
   envPath: config.envPath ?? ".env",

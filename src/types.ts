@@ -1,3 +1,6 @@
+/**
+ * The type of a method on a route.
+*/
 export type RouteMethod = (
   req: Request,
   patternResult: URLPatternResult,
