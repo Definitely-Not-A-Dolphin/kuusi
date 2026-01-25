@@ -1,3 +1,20 @@
+/**
+ * This module contains the `kuusi()` router, and also re-exports everything else importable from this package.
+ *
+ * ```ts
+ * import { kuusi } from "@kuusi/kuusi";
+ *
+ * Deno.serve(
+ *   { port: 1296 },
+ *   async function (req: Request): Promise<Response> {
+ *     return await kuusi(req);
+ *   },
+ * );
+ * ```
+ *
+ * @module
+ */
+
 import { walkSync } from "@std/fs";
 import { relative } from "@std/path";
 import { config } from "../../kuusiApp/kuusi.config.ts";

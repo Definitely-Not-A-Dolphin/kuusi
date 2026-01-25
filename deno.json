@@ -1,5 +1,5 @@
 {
-  "name": "kuusi",
+  "name": "@kuusi/kuusi",
   "version": "pre-0.0.1",
   "exports": {
     ".": "src/mod.ts",
