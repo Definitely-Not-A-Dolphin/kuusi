@@ -25,21 +25,21 @@ export * from "./env.ts";
 export * from "./types.ts";
 export * from "./config.ts";
 
-const routeDir = kuusiConfig.routesPath ?? "routes";
-
 const paths = Array.from(
-  walkSync(routeDir, { includeDirs: false }),
-  ({ path }) => relative(routeDir, path),
+  walkSync(kuusiConfig.routesPath, { includeDirs: false }),
+  ({ path }) => relative(kuusiConfig.routesPath, path),
 );
 
 const routes: [URLPattern, Route][] = [];
 
+async function dynImport(path: string): object {
+  return await import(path) as object;
+}
+
 for (const path of paths) {
   if (!path.endsWith(".route.ts")) continue;
 
-  const imports = await import(
-    `${import.meta.dirname}/../${routeDir}/${path}`
-  ) as object;
+  const imports = await import(kuusiConfig.routesPath + "/" + path) as object;
 
   if (!("route" in imports)) {
     throw new Error(`routes/${path} does not provide a route export`);

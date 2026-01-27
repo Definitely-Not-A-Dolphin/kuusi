@@ -32,17 +32,17 @@ import { existsSync } from "@std/fs";
 import { kuusiConfig } from "./config.ts";
 
 /** An object containing all environment variables, including those in a potential `.env` file. */
-const env = Deno.env.toObject();
+const env: Record<string, string> = Deno.env.toObject();
 /** An object containing all environment variables in a `.env` file. */
-const dotenv = await load({
-  export: kuusiConfig.exportDotenv ?? false,
-  envPath: kuusiConfig.envPath ?? ".env",
+const dotenv: Record<string, string> = await load({
+  export: kuusiConfig.exportDotenv,
+  envPath: kuusiConfig.envPath,
 });
 
 if (existsSync(".env.template")) {
   const templateEnv = await load({
     export: true,
-    envPath: kuusiConfig.envTemplatePath ?? ".env.template",
+    envPath: kuusiConfig.envTemplatePath,
   });
 
   const notFound = Object.keys(templateEnv).find((key) => !dotenv[key]);
