@@ -45,9 +45,7 @@ if (existsSync(kuusiConfig.envTemplatePath)) {
     envPath: kuusiConfig.envTemplatePath,
   });
 
-  const notFound = Object.keys(templateEnv).find((key) =>
-    !Object.keys(dotenv).includes(key)
-  );
+  const notFound = Object.keys(templateEnv).find((key) => !(key in dotenv));
 
   if (!notFound) {
     throw new Error(

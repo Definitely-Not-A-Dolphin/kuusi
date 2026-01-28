@@ -1,17 +1,17 @@
 /**
- * This module allows the user to configure kuusi.
+ * This module exports all the tools required for the user to configure kuusi.
  *
  * @module
  */
 
-//import { existsSync } from "@std/fs/exists";
+import { existsSync } from "@std/fs/exists";
 import type { KuusiConfig } from "./types.ts";
 
 // Default config
 const kuusiConfig: KuusiConfig = {
   envPath: ".env",
   envTemplatePath: ".env.template",
-  //routesPath: "routes/",
+  routesPath: "routes/",
   exportDotenv: false,
 };
 let configged: boolean = false;
@@ -42,15 +42,15 @@ export function setKuusiConfig(config: Partial<KuusiConfig>): void {
     ) (kuusiConfig[keyofConfig] as string) = value;
   }
 
-  //if (config.routesPath && !config.routesPath.endsWith("/")) {
-  //  throw new Error("kuusi-routes-file: The routesPath must be a directory.");
-  //}
+  if (config.routesPath && !config.routesPath.endsWith("/")) {
+    throw new Error("kuusi-routes-file: The routesPath must be a directory.");
+  }
 
-  //if (!existsSync(kuusiConfig.routesPath)) {
-  //  throw new Error(
-  //    "kuusi-no-routes-directory: The routes directory does not exist.",
-  //  );
-  //}
+  if (!existsSync(kuusiConfig.routesPath)) {
+    throw new Error(
+      "kuusi-no-routes-directory: The routes directory does not exist.",
+    );
+  }
 }
 
 export { kuusiConfig };

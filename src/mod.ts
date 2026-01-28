@@ -1,5 +1,5 @@
 /**
- * This module contains the `kuusi()` router, and also re-exports everything else importable from this package.
+ * Kuusi: it a little whacky zany. A simple router / library / framework for Deno utilizing file-based routing.
  *
  * ```ts
  * import { kuusi } from "@kuusi/kuusi";
@@ -18,8 +18,8 @@
  */
 
 import { walkSync } from "@std/fs";
-import { join, relative, resolve, toFileUrl } from "@std/path";
-//import { kuusiConfig } from "./config.ts";
+import { join, relative, toFileUrl } from "@std/path";
+import { kuusiConfig } from "./config.ts";
 import { type KuusiRoutes, Route } from "./types.ts";
 import { isObjKey, parsePath, unwrap } from "./utils.ts";
 
@@ -43,16 +43,16 @@ export async function getKuusiRoutes(): Promise<KuusiRoutes> {
   for (const path of paths) {
     if (!path.endsWith(".route.ts")) continue;
 
-    const projectRoot = resolve(Deno.cwd(), ".");
-    const absolutePath = toFileUrl(join(projectRoot, `routes/${path}`)).href;
+    const absolutePath =
+      toFileUrl(join(Deno.cwd(), kuusiConfig.routesPath + path)).href;
     const imports = await import(absolutePath) as object;
 
     if (!("route" in imports)) {
-      throw new Error(`routes/${path} does not provide a route export`);
+      throw new Error(`${absolutePath} does not provide a route export`);
     }
 
     if (!(imports.route instanceof Route)) {
-      throw new Error(`routes/${path} does not provide a valid route export`);
+      throw new Error(`${absolutePath} does not provide a valid route export`);
     }
 
     routes.push([
