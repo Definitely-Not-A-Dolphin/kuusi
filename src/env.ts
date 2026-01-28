@@ -39,16 +39,20 @@ const dotenv: Record<string, string> = await load({
   envPath: kuusiConfig.envPath,
 });
 
-if (existsSync(".env.template")) {
+if (existsSync(kuusiConfig.envTemplatePath)) {
   const templateEnv = await load({
     export: true,
     envPath: kuusiConfig.envTemplatePath,
   });
 
-  const notFound = Object.keys(templateEnv).find((key) => !dotenv[key]);
+  const notFound = Object.keys(templateEnv).find((key) =>
+    !Object.keys(dotenv).includes(key)
+  );
 
-  if (notFound) {
-    throw new Error(`kuusi-missing-dotenv-key: Missing .env variable ${notFound}`);
+  if (!notFound) {
+    throw new Error(
+      `kuusi-missing-dotenv-key: Missing .env variable "${notFound}"`,
+    );
   }
 }
 

@@ -5,6 +5,11 @@
  */
 
 /**
+ * Type of an array of tuples that hold the URLPattern and the Route of each Route.
+ */
+export type KuusiRoutes = [URLPattern, Route][];
+
+/**
  * Type of a method that serves a HTTP method on a route.
  *
  * @property req The Request that the method should fullfill.
@@ -16,7 +21,7 @@ export type RouteMethod = (
 ) => Promise<Response> | Response;
 
 /**
- * A type that is implemented by `Route`, and used by said class in the constructor as parameter type. Holds the same properties as `Route`, but they aren't `readonly`.
+ * Type that is implemented by `Route`, and used by said class in the constructor as parameter type. Holds the same properties as `Route`, but they aren't `readonly`.
  */
 export type RouteMethods = {
   GET?: RouteMethod;

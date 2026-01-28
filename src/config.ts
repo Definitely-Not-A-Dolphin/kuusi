@@ -1,3 +1,9 @@
+/**
+ * This module allows the user to configure kuusi.
+ *
+ * @module
+ */
+
 //import { existsSync } from "@std/fs/exists";
 import type { KuusiConfig } from "./types.ts";
 
@@ -35,8 +41,6 @@ export function setKuusiConfig(config: Partial<KuusiConfig>): void {
       value !== true && value !== false
     ) (kuusiConfig[keyofConfig] as string) = value;
   }
-
-  console.log(kuusiConfig);
 
   //if (config.routesPath && !config.routesPath.endsWith("/")) {
   //  throw new Error("kuusi-routes-file: The routesPath must be a directory.");
